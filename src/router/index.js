@@ -5,6 +5,7 @@ import Chadan from '../views/chadan.vue'
 import Kele from '../views/kele.vue'
 import Jd from '../views/jd.vue'
 import Xiaolong from '../views/xiaolong.vue'
+import RobotTool from '../views/robotTool.vue'
 Vue.use(VueRouter)
 
 const routes = [{
@@ -31,6 +32,11 @@ const routes = [{
         path: '/xiaolong',
         name: 'xiaolong',
         component: Xiaolong
+    },
+    {
+        path: '/robotTool',
+        name: 'robotTool',
+        component: RobotTool
     },
     {
         path: '/about',
