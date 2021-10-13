@@ -85,9 +85,7 @@
                         <el-form :label-position="labelPosition" :rules="rules" ref="ruleForm" label-width="80px" :model="ruleForm">
                           <el-form-item label="开始时间" prop="startTime">
 
-                            <el-time-picker
-                              v-model="ruleForm.startTime"
-                              placeholder="任意时间点">
+                            <el-time-picker v-model="ruleForm.startTime" placeholder="任意时间点">
                             </el-time-picker>
                             <!-- <el-time-select v-model="ruleForm.startTime" :picker-options="startPickerOptions" placeholder="选择开始时间">
                             </el-time-select> -->
@@ -211,7 +209,7 @@ export default {
     };
   },
   computed: {
-    btnTxt: function() {
+    btnTxt: function () {
       return this.isStart ? "停止" : "开始";
     }
   },
@@ -222,6 +220,9 @@ export default {
     }
     if (window.localStorage.getItem("setting")) {
       this.ruleForm = JSON.parse(localStorage.getItem("setting"));
+      if (this.ruleForm.startTime) {
+        this.ruleForm.startTime = new Date(this.ruleForm.startTime);
+      }
     }
     //this.init()
   },
@@ -308,6 +309,7 @@ export default {
         var hours = starttime.setHours(h);
         var min = starttime.setMinutes(m);
         var sec = starttime.setSeconds(s);
+        var sec = starttime.setMilliseconds(0);
         var count = 0;
         var interval = 50;
 
@@ -319,7 +321,7 @@ export default {
         var localNowtime = new Date();
         var difference = localNowtime.getTime() - parseInt(res.currentTime2); //时间差
         var starttimes = starttime.getTime();
-        let _interval = function() {
+        let _interval = function () {
           let _self = this;
           count++;
           _this.clock && window.clearTimeout(_this.clock);
@@ -329,10 +331,10 @@ export default {
           //'开始(毫秒):'+parseInt(starttimes) ,'当前(毫秒):'+parseInt(nowtimes),
           console.log(
             "%c" +
-              parseInt(starttimes - parseInt(nowtimes)) / 1000 +
-              "秒后开始,时间差:" +
-              difference +
-              "ms",
+            parseInt(starttimes - parseInt(nowtimes)) / 1000 +
+            "秒后开始,时间差:" +
+            difference +
+            "ms",
             "color: #7ED0A7;"
           );
           _this.showInfo =
@@ -378,14 +380,14 @@ export default {
         let preMax = _this.ruleForm.count * canUseData;
         console.log(preMax);
         let preCount = 0;
-        let _preInterval = function() {
+        let _preInterval = function () {
           preCount++;
           if (preCount > preMax) {
-            preTimer && clearTimeout(preTimer);
+            preTimer && window.clearTimeout(preTimer);
             return;
           }
           _this.getJdCoupon({ value: "pre-start-up" }, 0, 0);
-          let preTimer = setTimeout(function() {
+          let preTimer = window.setTimeout(function () {
             _preInterval();
           }, _this.ruleForm.step / canUseData);
         };
@@ -399,17 +401,17 @@ export default {
       // }
       let _this = this;
       let max = this.ruleForm.count;
-      let _interval = function(el, index) {
+      let _interval = function (el, index) {
         let count = _this.count[index] || 0;
         count++;
         _this.$set(_this.count, index, count);
         //console.log('%ccoupon:' + el + ' ' + count[index] + '/' + max + ' ' + 'jd time:' + new Date(new Date().getTime() - currentTime).Format("MM-dd HH:mm:ss.xx") + ' ' + rdata.subCodeMsg, 'color:#B086D5;')
         if (count > max) {
-          _this.timer[index] && clearTimeout(_this.timer[index]);
+          _this.timer[index] && window.clearTimeout(_this.timer[index]);
           return false;
         }
         _this.getJdCoupon(el, index, count);
-        let timer = setTimeout(() => {
+        let timer = window.setTimeout(() => {
           _interval(el, index);
         }, _this.ruleForm.step);
         _this.$set(_this.timer, index, timer);
