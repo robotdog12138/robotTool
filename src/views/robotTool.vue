@@ -17,10 +17,18 @@
                         <span>基础设置</span>
                       </div>
                       <div>
+
                         <el-form :model="ruleForm" :label-position="labelPosition" :rules="rules" label-width="80px" class="demo-ruleForm">
+                          <el-form-item label="可选列表">
+                            <el-select v-model="optionVal" @change="selectChange" placeholder="请选择">
+                              <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
+                              </el-option>
+                            </el-select>
+                          </el-form-item>
                           <el-form-item label="网址" prop="url">
                             <el-input v-model="ruleForm.url" autocomplete="off"></el-input>
                           </el-form-item>
+
                         </el-form>
                       </div>
                     </el-card>
@@ -159,6 +167,21 @@ export default {
   name: "Home",
   data() {
     return {
+      options: [
+        {
+          value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=g1ucidd8ed2209264c92d31d5d7e8e8a,roleId=60257509,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
+          label: '99-5',
+          key:'g1ucidd8ed2209264c92d31d5d7e8e8a',
+          roleId:'60257509'
+        },
+         {
+          value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=gcu1i1d2ef24012f42bc7549e9a99be2,roleId=60257525,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
+          label: '100-7',
+          key:'gcu1i1d2ef24012f42bc7549e9a99be2',
+          roleId:'60257525'
+        },
+      ],
+      optionVal: '',
       currentTime: "",
       preStartUp: false, //预先启动，降低冷启动、并发实例及业务代码初始化引起的耗时
       clock: 0, //开始倒计时
@@ -461,6 +484,9 @@ export default {
 
     clearLog() {
       this.logs = [];
+    },
+    selectChange(val){
+      this.ruleForm.url = val
     }
   }
 };
