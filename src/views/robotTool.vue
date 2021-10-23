@@ -20,8 +20,8 @@
 
                         <el-form :model="ruleForm" :label-position="labelPosition" :rules="rules" label-width="80px" class="demo-ruleForm">
                           <el-form-item label="可选列表">
-                            <el-select v-model="optionVal" @change="selectChange" placeholder="请选择">
-                              <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item.value">
+                            <el-select v-model="optionVal" value-key="key" @change="selectChange" placeholder="请选择">
+                              <el-option v-for="item in options" :key="item.key" :label="item.label" :value="item">
                               </el-option>
                             </el-select>
                           </el-form-item>
@@ -51,6 +51,8 @@
                           <el-table-column prop="name" label="别名" width="80">
                           </el-table-column>
                           <el-table-column prop="value" :show-overflow-tooltip="true" label="账户">
+                          </el-table-column>
+                          <el-table-column prop="kmd_token" :show-overflow-tooltip="true" label="token">
                           </el-table-column>
                           <el-table-column label="禁用" width="80">
                             <template slot-scope="scope">
@@ -171,17 +173,40 @@ export default {
         {
           value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=g1ucidd8ed2209264c92d31d5d7e8e8a,roleId=60257509,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
           label: '99-5',
-          key:'g1ucidd8ed2209264c92d31d5d7e8e8a',
-          roleId:'60257509'
+          key: 'g1ucidd8ed2209264c92d31d5d7e8e8a',
+          roleId: '60257509',
+          type: 'api'
         },
-         {
+        {
           value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=gcu1i1d2ef24012f42bc7549e9a99be2,roleId=60257525,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
           label: '100-7',
-          key:'gcu1i1d2ef24012f42bc7549e9a99be2',
-          roleId:'60257525'
+          key: 'gcu1i1d2ef24012f42bc7549e9a99be2',
+          roleId: '60257525',
+          type: 'api'
+        },
+        {
+          value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=gbu1i3daee2418134120f3473060e475,roleId=60500536,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
+          label: '沃尔玛2000-100',
+          key: 'gbu1i3daee2418134120f3473060e475',
+          roleId: '60500536',
+          type: 'api'
+        },
+        {
+          value: '2',
+          label: '200-100',
+          key: '14512491027852247062',
+          roleId: '2',
+          type: 'kmg'
+        },
+        {
+          value: '1',
+          label: '50-20',
+          key: '14512491027852247061',
+          roleId: '1',
+          type: 'kmg'
         },
       ],
-      optionVal: '',
+      optionVal: {},
       currentTime: "",
       preStartUp: false, //预先启动，降低冷启动、并发实例及业务代码初始化引起的耗时
       clock: 0, //开始倒计时
@@ -228,7 +253,8 @@ export default {
       accountRules: {
         value: [{ required: true, message: "账户不能为空" }]
       },
-      logs: []
+      logs: [],
+      couponType: "api"
     };
   },
   computed: {
@@ -375,7 +401,11 @@ export default {
             //console.log(_this.clock)
             return;
           } else if (parseInt(starttimes) - parseInt(nowtimes) <= 10000) {
-            _this.preStartUpInterval();
+
+            if (_this.couponType == 'api') {
+              _this.preStartUpInterval();
+            }
+
           }
 
           _this.clock = window.setTimeout(() => {
@@ -409,6 +439,7 @@ export default {
             preTimer && window.clearTimeout(preTimer);
             return;
           }
+          //如果是kmg接口，就预先获取token
           _this.getJdCoupon({ value: "pre-start-up" }, 0, 0);
           let preTimer = window.setTimeout(function () {
             _preInterval();
@@ -433,7 +464,13 @@ export default {
           _this.timer[index] && window.clearTimeout(_this.timer[index]);
           return false;
         }
-        _this.getJdCoupon(el, index, count);
+        console.log(_this.couponType)
+        //如果是kmg接口，就预先获取token
+        if (_this.couponType == 'kmg') {
+          _this.getKmgCoupon(el, index, count);
+        } else if (_this.couponType == 'api') {
+          _this.getJdCoupon(el, index, count);
+        }
         let timer = window.setTimeout(() => {
           _interval(el, index);
         }, _this.ruleForm.step);
@@ -481,13 +518,94 @@ export default {
           });
       }
     },
+    getKmgCoupon(el, index, count) {
+      let _this = this;
+      if (!el.disabled) {
+        if (el.kmd_token) {
+          _this.kmgCoupon(el, index, count)
+        } else {
+          _this.kmdToken(el, index, count)
+        }
+      }
+    },
+    kmgCoupon(el, index, count) {
+      let _this = this;
+      let moment = require("moment");
+      let startReqTime = new Date().getTime() - parseInt(_this.currentTime);
+      jd.getKmdCoupon({
+        url: _this.ruleForm.url,
+        token: el.kmd_token
+      }).then(res => {
+        console.log(res, 'kmgCoupon')
 
+        let endReqTime = new Date().getTime() - parseInt(_this.currentTime);
+        _this.logs.push({
+          account: "No." + (index + 1),
+          count: "第" + count + "次",
+          log: JSON.stringify(res),
+          id: index + "" + count + "" + new Date().getTime(),
+          startReqTime: moment(startReqTime).format("HH:mm:ss:SSS"),
+          endReqTime: moment(endReqTime).format("HH:mm:ss:SSS"),
+          diff: endReqTime - startReqTime
+        });
+        if (res.data.code == 401) {
+          _this.kmdToken(el, index, count)
+        }
+      }).catch(error => {
+        let endReqTime = new Date().getTime() - parseInt(_this.currentTime);
+        _this.logs.push({
+          account: "No." + (index + 1),
+          count: "第" + count + "次",
+          log: JSON.stringify(error),
+          id: index + "" + count + "" + new Date().getTime(),
+          startReqTime: moment(startReqTime).format("HH:mm:ss:SSS"),
+          endReqTime: moment(endReqTime).format("HH:mm:ss:SSS"),
+          diff: endReqTime - startReqTime
+        });
+      })
+    },
+    kmdToken(el, index, count) {
+      let _this = this;
+      let moment = require("moment");
+      let startReqTime = new Date().getTime() - parseInt(_this.currentTime);
+      jd.getKmdToken({
+        ck: el.value
+      }).then(res => {
+        _this.$set(_this.tableData[index], 'kmd_token', res.data)
+        let endReqTime = new Date().getTime() - parseInt(_this.currentTime);
+        _this.logs.push({
+          account: "No." + (index + 1),
+          count: "第" + count + "次",
+          log: JSON.stringify(res.data),
+          id: index + "" + count + "" + new Date().getTime(),
+          startReqTime: moment(startReqTime).format("HH:mm:ss:SSS"),
+          endReqTime: moment(endReqTime).format("HH:mm:ss:SSS"),
+          diff: endReqTime - startReqTime
+        });
+        _this.kmgCoupon(el, index, count)
+      }).catch(error => {
+
+        let endReqTime = new Date().getTime() - parseInt(_this.currentTime);
+        //_this.$set(_this.tableData[index], 'disabled', true)
+        _this.logs.push({
+          account: "No." + (index + 1),
+          count: "第" + count + "次",
+          log: JSON.stringify(error) + '账号暂时禁用',
+          id: index + "" + count + "" + new Date().getTime(),
+          startReqTime: moment(startReqTime).format("HH:mm:ss:SSS"),
+          endReqTime: moment(endReqTime).format("HH:mm:ss:SSS"),
+          diff: endReqTime - startReqTime
+        });
+      })
+    },
     clearLog() {
       this.logs = [];
     },
-    selectChange(val){
-      this.ruleForm.url = val
-    }
+    selectChange(val) {
+      this.couponType = val.type
+      this.ruleForm.url = val.value
+    },
+
   }
 };
 </script>

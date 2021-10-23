@@ -11,5 +11,27 @@ class Jd extends Http {
       }
     });
   }
+  getKmdToken(param) {
+    let _this = this;
+    return _this.request({
+      url: "/yushouToken",
+      method: "post",
+      param: param,
+      headers:{
+        "Content-Type":"application/json"
+      }
+    });
+  }
+  getKmdCoupon(param) {
+    let _this = this;
+    return _this.request({
+      url: "/yushou",
+      method: "post",
+      param: param,
+      headers:{
+        "Content-Type":"application/json"
+      }
+    });
+  }
 }
 export { Jd };
