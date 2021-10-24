@@ -186,9 +186,31 @@ export default {
         },
         {
           value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=gbu1i3daee2418134120f3473060e475,roleId=60500536,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
-          label: '沃尔玛2000-100',
+          label: '沃尔玛-100',
           key: 'gbu1i3daee2418134120f3473060e475',
           roleId: '60500536',
+          type: 'api'
+        },
+        
+        {
+          value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=gau9iddce0260b2c495125ffb81bd925,roleId=60500539,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
+          label: '沃尔玛-80',
+          key: 'gau9iddce0260b2c495125ffb81bd925',
+          roleId: '60500539',
+          type: 'api'
+        },
+        {
+          value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=g6ueicdde92c0c224b0dd46bde84e4bf,roleId=60500541,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
+          label: '沃尔玛-60',
+          key: 'g6ueicdde92c0c224b0dd46bde84e4bf',
+          roleId: '60500541',
+          type: 'api'
+        },
+         {
+          value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=gbu2i9dce1270023404f932412161b8a,roleId=60500543,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
+          label: '沃尔玛-50',
+          key: 'gbu2i9dce1270023404f932412161b8a',
+          roleId: '60500543',
           type: 'api'
         },
         {
