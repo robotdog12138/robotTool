@@ -103,8 +103,11 @@
                           <el-form-item label="开始延迟" prop="advance">
                             <el-input v-model.number="ruleForm.advance"></el-input>
                           </el-form-item>
-                          <el-form-item label="间隔时间" prop="step">
+                          <el-form-item label="每轮间隔" prop="step">
                             <el-input v-model.number="ruleForm.step"></el-input>
+                          </el-form-item>
+                          <el-form-item label="账号间隔" prop="step">
+                            <el-input v-model.number="ruleForm.space"></el-input>
                           </el-form-item>
                           <el-form-item label="领取次数" prop="count">
                             <el-input v-model.number="ruleForm.count"></el-input>
@@ -161,6 +164,7 @@
 import { now } from "moment";
 // @ is an alias to /src
 import { Common } from "../model/common";
+import { sleep } from "../util/utils"
 import { Jd } from "../model/jd";
 import { setTimeout } from "timers";
 let common = new Common();
@@ -191,7 +195,7 @@ export default {
           roleId: '60500536',
           type: 'api'
         },
-        
+
         {
           value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=gau9iddce0260b2c495125ffb81bd925,roleId=60500539,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
           label: '沃尔玛-80',
@@ -206,7 +210,7 @@ export default {
           roleId: '60500541',
           type: 'api'
         },
-         {
+        {
           value: 'https://api.m.jd.com/client.action?functionId=newBabelAwardCollection&body={%22activityId%22:%222QwmJao59JSGzjWtEWsT5zgxk291%22,%22scene%22:1,%22args%22:%22key=gbu2i9dce1270023404f932412161b8a,roleId=60500543,strengthenKey=C225838DC1351F9ACA8548E3171FF8A4A79652C3B40AA10EA6208B56F12A9AF708B8A2FA5F5B50B95A49BC155D64D3A4_babel%22}&client=wh5',
           label: '沃尔玛-50',
           key: 'gbu2i9dce1270023404f932412161b8a',
@@ -250,6 +254,7 @@ export default {
         startTime: "",
         count: 1,
         step: 300,
+        space: 0,
         advance: -200
       },
       rules: {
@@ -308,7 +313,7 @@ export default {
           this.timer = [];
           if (this.isStart) {
             this.isStart = false;
-            this.clock && window.clearTimeout(this.clock);
+            //this.clock && window.clearTimeout(this.clock);
             console.log(this.clock);
           } else {
             this.init();
@@ -470,39 +475,52 @@ export default {
         _preInterval();
       }
     },
-    startGetCouponInterval() {
+    async startGetCouponInterval() {
       // if (this.count > this.ruleForm.count) {
       //   _this.jdCouponInterval && clearInterval(_this.jdCouponInterval)
       //   return
       // }
       let _this = this;
       let max = this.ruleForm.count;
-      let _interval = function (el, index) {
-        let count = _this.count[index] || 0;
-        count++;
-        _this.$set(_this.count, index, count);
-        //console.log('%ccoupon:' + el + ' ' + count[index] + '/' + max + ' ' + 'jd time:' + new Date(new Date().getTime() - currentTime).Format("MM-dd HH:mm:ss.xx") + ' ' + rdata.subCodeMsg, 'color:#B086D5;')
-        if (count > max) {
-          _this.timer[index] && window.clearTimeout(_this.timer[index]);
-          return false;
+      // let _interval = function (el, index) {
+      //   let count = _this.count[index] || 0;
+      //   count++;
+      //   _this.$set(_this.count, index, count);
+      //   //console.log('%ccoupon:' + el + ' ' + count[index] + '/' + max + ' ' + 'jd time:' + new Date(new Date().getTime() - currentTime).Format("MM-dd HH:mm:ss.xx") + ' ' + rdata.subCodeMsg, 'color:#B086D5;')
+      //   if (count > max) {
+      //     _this.timer[index] && window.clearTimeout(_this.timer[index]);
+      //     return false;
+      //   }
+      //   console.log(_this.couponType)
+      //   //如果是kmg接口，就预先获取token
+      //   if (_this.couponType == 'kmg') {
+      //     _this.getKmgCoupon(el, index, count);
+      //   } else if (_this.couponType == 'api') {
+      //     _this.getJdCoupon(el, index, count);
+      //   }
+      //   let timer = window.setTimeout(() => {
+      //     _interval(el, index);
+      //   }, 10);
+      //   _this.$set(_this.timer, index, timer);
+      // };
+      for (let index = 1; index <= max; index++) {
+        //const element = array[index];
+        if (!_this.isStart) break;
+        for (let j = 0; j < _this.tableData.length; j++) {
+          if (!_this.isStart) break;
+          const el = _this.tableData[j];
+          if (!el.disabled) {
+            //_interval(el, index);
+            if (_this.couponType == 'kmg') {
+              _this.getKmgCoupon(el, j, index);
+            } else if (_this.couponType == 'api') {
+              _this.getJdCoupon(el, j, index);
+            }
+            await sleep(_this.ruleForm.space)
+          }
         }
-        console.log(_this.couponType)
-        //如果是kmg接口，就预先获取token
-        if (_this.couponType == 'kmg') {
-          _this.getKmgCoupon(el, index, count);
-        } else if (_this.couponType == 'api') {
-          _this.getJdCoupon(el, index, count);
-        }
-        let timer = window.setTimeout(() => {
-          _interval(el, index);
-        }, _this.ruleForm.step);
-        _this.$set(_this.timer, index, timer);
-      };
-      this.tableData.forEach((el, index) => {
-        // _this.count.push(0)
-        // _this.timer.push(0)
-        _interval(el, index);
-      });
+        await sleep(_this.ruleForm.step)
+      }
     },
     getJdCoupon(el, index, count) {
       let _this = this;
@@ -608,7 +626,7 @@ export default {
       }).catch(error => {
 
         let endReqTime = new Date().getTime() - parseInt(_this.currentTime);
-        //_this.$set(_this.tableData[index], 'disabled', true)
+        _this.$set(_this.tableData[index], 'disabled', true)
         _this.logs.push({
           account: "No." + (index + 1),
           count: "第" + count + "次",
