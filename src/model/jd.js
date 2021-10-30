@@ -44,6 +44,17 @@ class Jd extends Http {
       }
     });
   }
+  getCoupon2(param) {
+    let _this = this;
+    return _this.request({
+      url: "/newjd2",
+      method: "post",
+      param: param,
+      headers:{
+        "Content-Type":"application/json"
+      }
+    });
+  }
   getKmdToken(param) {
     let _this = this;
     return _this.request({

@@ -48,7 +48,7 @@
                         <el-table :data="options" stripe border style="width: 100%">
                           <el-table-column prop="name" label="名称" width="120">
                           </el-table-column>
-                          <el-table-column prop="type" label="别名" width="80">
+                          <el-table-column prop="type" label="类型" width="80">
                           </el-table-column>
                           <el-table-column prop="url" :show-overflow-tooltip="true" label="网址">
                           </el-table-column>

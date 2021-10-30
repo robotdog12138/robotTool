@@ -461,6 +461,8 @@ export default {
               _this.getKmgCoupon(el, j, index);
             } else if (_this.couponType == 'api') {
               _this.getJdCoupon(el, j, index);
+            } else if (_this.couponType == 'carnivalcity') {
+              _this.getJdCoupon2(el, j, index);
             }
             await sleep(_this.ruleForm.space)
           }
@@ -475,6 +477,42 @@ export default {
         let startReqTime = new Date().getTime() - parseInt(_this.currentTime);
         jd
           .getCoupon({
+            url: _this.ruleForm.url,
+            ck: el.value
+          })
+          .then(res => {
+            let endReqTime = new Date().getTime() - parseInt(_this.currentTime);
+            _this.logs.push({
+              account: "No." + (index + 1),
+              count: "第" + count + "次",
+              log: JSON.stringify(res),
+              id: index + "" + count + "" + new Date().getTime(),
+              startReqTime: moment(startReqTime).format("HH:mm:ss:SSS"),
+              endReqTime: moment(endReqTime).format("HH:mm:ss:SSS"),
+              diff: endReqTime - startReqTime
+            });
+          })
+          .catch(error => {
+            let endReqTime = new Date().getTime() - parseInt(_this.currentTime);
+            _this.logs.push({
+              account: "No." + (index + 1),
+              count: "第" + count + "次",
+              log: JSON.stringify(error),
+              id: index + "" + count + "" + new Date().getTime(),
+              startReqTime: moment(startReqTime).format("HH:mm:ss:SSS"),
+              endReqTime: moment(endReqTime).format("HH:mm:ss:SSS"),
+              diff: endReqTime - startReqTime
+            });
+          });
+      }
+    },
+    getJdCoupon2(el, index, count) {
+      let _this = this;
+      let moment = require("moment");
+      if (!el.disabled) {
+        let startReqTime = new Date().getTime() - parseInt(_this.currentTime);
+        jd
+          .getCoupon2({
             url: _this.ruleForm.url,
             ck: el.value
           })
