@@ -13,8 +13,8 @@ axiosRetry(axios, {
 });
 
 //axios.defaults.withCredentials = true; //让ajax携带cookie
-axios.defaults.baseURL = "https://service-ruxwv0ef-1252639209.bj.apigw.tencentcs.com/release/";
-//axios.defaults.baseURL = "http://localhost:9000/";
+//axios.defaults.baseURL = "https://service-jrik2ub3-1252639209.bj.apigw.tencentcs.com/release/";
+axios.defaults.baseURL = "http://localhost:9000/";
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded;charset=UTF-8";
 const codeMessage = {

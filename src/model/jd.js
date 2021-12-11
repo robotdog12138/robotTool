@@ -44,10 +44,10 @@ class Jd extends Http {
       }
     });
   }
-  getCoupon2(param) {
+  getMeituan(param) {
     let _this = this;
     return _this.request({
-      url: "/newjd2",
+      url: "/meituan",
       method: "post",
       param: param,
       headers:{
