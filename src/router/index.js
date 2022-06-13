@@ -6,6 +6,7 @@ import Kele from '../views/kele.vue'
 import Jd from '../views/jd.vue'
 import Xiaolong from '../views/xiaolong.vue'
 import RobotTool from '../views/robotTool.vue'
+import Coupon from '../views/coupon.vue'
 import Admin from '../views/admin.vue'
 Vue.use(VueRouter)
 
@@ -38,6 +39,11 @@ const routes = [{
         path: '/robotTool',
         name: 'robotTool',
         component: RobotTool
+    },
+    {
+        path: '/coupon',
+        name: 'coupon',
+        component: Coupon
     },
     {
         path: '/admin',

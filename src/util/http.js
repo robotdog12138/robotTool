@@ -20,7 +20,7 @@ class Http {
                 })
                 .then(function(res) {
                     if (res.status === 200) {
-                        if (res.data.result || res.data.code == 0) {
+                        if (res.data.result || res.data.code == 0 || res.data.code == 200) {
                             //this.hideLoading();
                             resolve(res.data);
                         } else {
