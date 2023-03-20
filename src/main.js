@@ -1,3 +1,13 @@
+/*
+ * @Author: robot12138 lyice188@163.com
+ * @Date: 2021-10-07 20:24:52
+ * @LastEditors: robot12138 lyice188@163.com
+ * @LastEditTime: 2022-09-04 15:52:54
+ * @FilePath: \robotTool\src\main.js
+ * @Description: 
+ * 
+ * Copyright (c) 2022 by robot12138 lyice188@163.com, All Rights Reserved. 
+ */
 import Vue from "vue";
 import App from "./App.vue";
 import "./plugins/element.js";
@@ -13,7 +23,7 @@ axiosRetry(axios, {
 });
 
 //axios.defaults.withCredentials = true; //让ajax携带cookie
-axios.defaults.baseURL = "https://service-jrik2ub3-1252639209.bj.apigw.tencentcs.com/release/";
+axios.defaults.baseURL = "https://service-dj27j3l1-1256166403.bj.apigw.tencentcs.com/release/";
 // axios.defaults.baseURL = "http://localhost:9000/";
 axios.defaults.headers.post["Content-Type"] =
     "application/x-www-form-urlencoded;charset=UTF-8";

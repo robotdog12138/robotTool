@@ -1,8 +1,18 @@
+/*
+ * @Author: lyice fcyx666@gmail.com
+ * @Date: 2021-10-12 19:26:11
+ * @LastEditors: lyice fcyx666@gmail.com
+ * @LastEditTime: 2023-03-20 11:30:05
+ * @FilePath: \robotTool\src\util\http.js
+ * @Description: 
+ * 
+ * Copyright (c) 2023 by ${git_name_email}, All Rights Reserved. 
+ */
 import axios from "axios";
 class Http {
     constructor() {
         this.scfApi =
-            "https://service-ci2v2f0n-1252639209.bj.apigw.tencentcs.com/release/";
+            "https://service-dj27j3l1-1256166403.bj.apigw.tencentcs.com/release/";
     }
     request({ url, method = "get", param = {}, headers = {} }) {
         let _this = this;
