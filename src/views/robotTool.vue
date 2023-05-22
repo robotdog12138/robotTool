@@ -322,12 +322,12 @@ export default {
         _this.isStart = true;
         let res = await common.getJdTime();
         let now = new Date().getTime();
-        this.currentTime = now - parseInt(res.currentTime2);
+        this.currentTime = now - parseInt(res.data.serverNowTime);
         let time = this.ruleForm.startTime;
         let h = time.getHours();
         let m = time.getMinutes();
         let s = time.getSeconds();
-        var starttime = new Date(parseInt(res.currentTime2)); //服务器时间
+        var starttime = new Date(parseInt(res.data.serverNowTime)); //服务器时间
         var hours = starttime.setHours(h);
         var min = starttime.setMinutes(m);
         var sec = starttime.setSeconds(s);
@@ -341,7 +341,7 @@ export default {
         );
         console.log(starttime);
         var localNowtime = new Date();
-        var difference = localNowtime.getTime() - parseInt(res.currentTime2); //时间差
+        var difference = localNowtime.getTime() - parseInt(res.data.serverNowTime); //时间差
         var starttimes = starttime.getTime();
         let _interval = function () {
           let _self = this;
