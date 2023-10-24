@@ -18,7 +18,8 @@
                       </div>
                       <div>
 
-                        <el-form :model="ruleForm" :label-position="labelPosition" :rules="rules" label-width="80px" class="demo-ruleForm">
+                        <el-form :model="ruleForm" :label-position="labelPosition" :rules="rules" label-width="80px"
+                          class="demo-ruleForm">
                           <el-form-item label="可选列表">
                             <el-select v-model="optionVal" value-key="id" @change="selectChange" placeholder="请选择">
                               <el-option v-for="item in options" :key="item.id" :label="item.name" :value="item">
@@ -40,7 +41,8 @@
                     <el-card class="box-card" shadow="never">
                       <div slot="header" class="clearfix">
                         <span>账号信息</span>
-                        <el-button style="float: right" size="small" @click="saveAccountInfo" type="warning">保存信息</el-button>
+                        <el-button style="float: right" size="small" @click="saveAccountInfo"
+                          type="warning">保存信息</el-button>
                       </div>
                       <div>
                         <el-table :data="tableData" stripe border style="width: 100%">
@@ -52,7 +54,13 @@
                           </el-table-column>
                           <el-table-column prop="value" :show-overflow-tooltip="true" label="账户">
                           </el-table-column>
-                          <el-table-column prop="kmd_token" :show-overflow-tooltip="true" label="token">
+                          <!-- <el-table-column prop="kmd_token" :show-overflow-tooltip="true" label="token">
+                          </el-table-column> -->
+                          <el-table-column prop="log" :show-overflow-tooltip="true" label="LOG">
+                            <template slot-scope="scope">
+                              <el-input v-model="scope.row.log" placeholder="请输入log"></el-input>
+                            </template>
+                           
                           </el-table-column>
                           <el-table-column label="禁用" width="80">
                             <template slot-scope="scope">
@@ -63,13 +71,15 @@
                           <el-table-column label="操作" width="100">
                             <template slot-scope="scope">
 
-                              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                              <el-button size="mini" type="danger"
+                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                             </template>
                           </el-table-column>
 
                         </el-table>
                         <div style="margin-top: 20px">
-                          <el-form :inline="true" :model="accountForm" :rules="accountRules" ref="accountForm" class="demo-form-inline">
+                          <el-form :inline="true" :model="accountForm" :rules="accountRules" ref="accountForm"
+                            class="demo-form-inline">
                             <el-form-item label="别名" prop="name">
                               <el-input v-model="accountForm.name" placeholder="别名"></el-input>
                             </el-form-item>
@@ -92,7 +102,8 @@
                         <el-button style="float: right" size="small" @click="setting" type="success">保存设置</el-button>
                       </div>
                       <div>
-                        <el-form :label-position="labelPosition" :rules="rules" ref="ruleForm" label-width="80px" :model="ruleForm">
+                        <el-form :label-position="labelPosition" :rules="rules" ref="ruleForm" label-width="80px"
+                          :model="ruleForm">
                           <el-form-item label="开始时间" prop="startTime">
 
                             <el-time-picker v-model="ruleForm.startTime" placeholder="任意时间点">
@@ -117,7 +128,7 @@
                             </el-alert>
                           </el-form-item>
                           <el-form-item>
-                            <el-button type="primary" @click="submitRulesForm('ruleForm')">{{btnTxt}}</el-button>
+                            <el-button type="primary" @click="submitRulesForm('ruleForm')">{{ btnTxt }}</el-button>
                             <!-- <el-button @click="resetForm('ruleForm')">重置</el-button> -->
                           </el-form-item>
 
@@ -135,8 +146,9 @@
                         <span>日志</span>
                         <el-button style="float: right" size="small" @click="clearLog" type="danger">清空</el-button>
                       </div>
-                      <div v-for="log in logs" :key="log.id" class="text item" style="color:#409EFF;font-size:13px;margin-bottom:5px;">
-                        [{{log.account}}]:{{log.count}}:{{log.log}},开始时间:{{log.startReqTime}},返回时间:{{log.endReqTime}},耗时:{{log.diff}}ms
+                      <div v-for="log in logs" :key="log.id" class="text item"
+                        style="color:#409EFF;font-size:13px;margin-bottom:5px;">
+                        [{{ log.account }}]:{{ log.count }}:{{ log.log }},开始时间:{{ log.startReqTime }},返回时间:{{ log.endReqTime }},耗时:{{ log.diff }}ms
                       </div>
                     </el-card>
                   </el-col>
@@ -459,11 +471,11 @@ export default {
             //_interval(el, index);
             if (_this.couponType == 'kmg') {
               _this.getKmgCoupon(el, j, index);
-            } else if (_this.couponType == 'api') {
+            } else if (_this.couponType == 'api') {//主流程
               _this.getJdCoupon(el, j, index);
             } else if (_this.couponType == 'carnivalcity') {
               _this.getJdCoupon2(el, j, index);
-            }else if (_this.couponType == 'meituan') {
+            } else if (_this.couponType == 'meituan') {
               _this.getMeituanCoupon(el, j, index);
             }
             await sleep(_this.ruleForm.space)
@@ -474,12 +486,24 @@ export default {
     },
     getJdCoupon(el, index, count) {
       let _this = this;
+      // 原始链接
+      var url = _this.ruleForm.url;
+      // 正则表达式来匹配 "log" 参数的值
+      var regex = /("log":"[^"]*)/;
+      // 要替换成的新值
+      var newLogValue =el.log?el.log:"";
+      // 使用正则表达式替换 "log" 参数的值
+      var newUrl = url.replace(regex, '$1' + newLogValue);
+
+      // 打印替换后的 URL
+      console.log(newUrl);
+
       let moment = require("moment");
       if (!el.disabled) {
         let startReqTime = new Date().getTime() - parseInt(_this.currentTime);
         jd
           .getCoupon({
-            url: _this.ruleForm.url,
+            url: newUrl,
             ck: el.value
           })
           .then(res => {
@@ -551,7 +575,7 @@ export default {
         let startReqTime = new Date().getTime() - parseInt(_this.currentTime);
         jd
           .getMeituan({
-            json:_this.ruleForm.url,
+            json: _this.ruleForm.url,
             ck: el.value
           })
           .then(res => {
